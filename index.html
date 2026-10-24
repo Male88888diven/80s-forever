@@ -1,1 +1,94 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>80s Forever – Deine Erinnerung. Neu erlebt.</title><style>body{margin:0;font-family:Arial,sans-serif;background:#10051b;color:#fff}main{max-width:900px;margin:auto;padding:40px 20px}h1{font-size:52px;margin:20px 0 8px}h2{color:#ff4fd8}.card{background:#1d0b2b;border:1px solid #7d3b9b;border-radius:18px;padding:24px;margin:20px 0}label{display:block;margin:14px 0 7px}input,select,button{width:100%;box-sizing:border-box;padding:14px;border-radius:10px;border:0;font-size:16px}button{margin-top:18px;background:#ff4fd8;color:#14051d;font-weight:bold;cursor:pointer}.styles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.style{padding:18px;border:1px solid #7d3b9b;border-radius:12px}.small{opacity:.75}.price{font-size:28px;font-weight:bold}@media(max-width:700px){h1{font-size:38px}.styles{grid-template-columns:1fr}}</style></head><body><main><div class="small">80s FOREVER</div><h1>Dein Foto. Die 80er.</h1><h2>Deine Erinnerung. Neu erlebt.</h2><p>Wir verwandeln dein Foto mit KI in einen persönlichen 80er-Jahre-Look.</p><div class="styles"><div class="style"><b>Neon 80s</b><br>Neon, Nacht & Retro-Glow</div><div class="style"><b>Arcade 80s</b><br>Spielhalle & Pixel-Atmosphäre</div><div class="style"><b>Retro Magazine</b><br>80er-Fashion & Magazin-Look</div></div><div class="card"><div class="price">3 KI-Bilder – 9,90 €</div><form id="f"><label>E-Mail</label><input name="email" type="email" required placeholder="deine@email.at"><label>Stil</label><select name="style"><option value="neon">Neon 80s</option><option value="arcade">Arcade 80s</option><option value="magazine">Retro Magazine</option></select><label>Foto</label><input name="photo" type="file" accept="image/jpeg,image/png,image/webp" required><button>Weiter zur sicheren Zahlung</button></form><p id="msg" class="small"></p></div></main><script>f.onsubmit=async e=>{e.preventDefault();msg.textContent='Bitte warten …';const r=await fetch('/api/create-checkout',{method:'POST',body:new FormData(f)});const j=await r.json();if(j.url)location.href=j.url;else msg.textContent=j.error||'Fehler'};</script></body></html>
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>80s Forever – Dein Foto. Die 80er.</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:24px 14px;background:#10091d;color:#fff;font-family:Arial,sans-serif}
+main{max-width:620px;margin:auto;padding:26px 20px;background:#1b1230;border:1px solid #653d87;border-radius:20px;box-shadow:0 0 28px #a000ff35}
+h1{text-align:center;color:#ff55d9;text-shadow:0 0 16px #ff00cc;font-size:36px}
+h2{text-align:center;color:#55f5ff}
+p{text-align:center;line-height:1.6;color:#e4d8f5}
+label{display:block;margin-top:18px;margin-bottom:8px}
+input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #9a68bc;background:#10091d;color:white}
+.styles{display:grid;grid-template-columns:1fr;gap:10px}
+.style{padding:13px;border:1px solid #70458d;border-radius:12px;background:#241637}
+button{width:100%;padding:15px;margin-top:20px;border:0;border-radius:12px;background:linear-gradient(90deg,#ff36ca,#783cff,#00dff5);color:white;font-size:17px;font-weight:bold}
+.preview-wrap{display:none;margin-top:16px;text-align:center}
+#preview{max-width:100%;max-height:380px;border-radius:12px;border:2px solid #55f5ff}
+#status{margin-top:14px;color:#55f5ff;text-align:center}
+.small{font-size:12px;color:#c5b3d9}
+</style>
+</head>
+<body>
+<main>
+<h1>80s FOREVER</h1>
+<h2>Dein Foto. Die 80er.</h2>
+<p>Deine Erinnerung. Neu erlebt.<br>
+Wir verwandeln dein Foto mit KI in einen persönlichen 80er-Jahre-Look.</p>
+
+<form id="photoForm">
+<label>Wähle deinen 80er-Jahre-Stil</label>
+<div class="styles">
+<label class="style"><input type="radio" name="style" value="Neon 80s" checked> Neon 80s – Neon, Nacht & Retro-Glow</label>
+<label class="style"><input type="radio" name="style" value="Arcade 80s"> Arcade 80s – Spielhalle & Pixel-Atmosphäre</label>
+<label class="style"><input type="radio" name="style" value="Retro Magazine"> Retro Magazine – 80er-Fashion & Magazin-Look</label>
+</div>
+
+<label for="email">Deine E-Mail-Adresse</label>
+<input id="email" type="email" placeholder="deine@email.at" required>
+
+<label for="photo">Wähle dein Foto</label>
+<input id="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+
+<div class="preview-wrap" id="previewWrap">
+<p>Deine Foto-Vorschau:</p>
+<img id="preview" alt="Vorschau deines ausgewählten Fotos">
+</div>
+
+<p><strong>3 KI-Bilder – 9,90 €</strong></p>
+<button type="submit">Weiter zur sicheren Zahlung</button>
+<p class="small">Dein Foto wird hier zunächst nur in deinem Browser angezeigt.</p>
+</form>
+<div id="status" role="status"></div>
+</main>
+
+<script>
+const photoInput = document.getElementById('photo');
+const preview = document.getElementById('preview');
+const previewWrap = document.getElementById('previewWrap');
+const statusBox = document.getElementById('status');
+let previewUrl = null;
+
+photoInput.addEventListener('change', function () {
+  const file = this.files && this.files[0];
+  statusBox.textContent = '';
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = null;
+  if (!file) {
+    previewWrap.style.display = 'none';
+    preview.removeAttribute('src');
+    return;
+  }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+    this.value = '';
+    previewWrap.style.display = 'none';
+    statusBox.textContent = 'Bitte wähle ein JPG-, PNG- oder WebP-Bild.';
+    return;
+  }
+  previewUrl = URL.createObjectURL(file);
+  preview.src = previewUrl;
+  previewWrap.style.display = 'block';
+});
+
+document.getElementById('photoForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+  statusBox.textContent = 'Die Foto-Vorschau funktioniert. KI-Bilderzeugung und Zahlung sind noch nicht angeschlossen.';
+});
+</script>
+</body>
+     </html>
+     
